@@ -9,7 +9,7 @@ def hello_world():
 
 # Déposez votre code à partir d'ici :
 
-@app.route("/contact")
+@app.route("/contact1")
 def MaPremiereAPI():
     return "<h2>Ma page de contact</h2>"  
 
@@ -43,7 +43,7 @@ def mongraphique2():
 def moncontact():
     return render_template("contact.html")
 
-@app.route("/contact_avion")
+@app.route("/contact")
 def moncontactavion():
     return render_template("contact_avion.html")
 
