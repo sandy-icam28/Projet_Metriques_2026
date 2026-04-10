@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------------------------------------
-ATELIER METRIQUES
+ATELIER METRIQUES 2
 ------------------------------------------------------------------------------------------------------
 L’idée en 30 secondes : Cet atelier a pour objectif de vous apprendre à **créer des graphiques** (dans le cadre de création de métriques par exemple) grace à une application **Python** et via la **l'utilisation et la construction d'API**. Vous allez utiliser et mettre en oeuvre au travers de cet atelier, un **serveur Web Python** utilisant le **Framework Flask**. Vous allez créer des API pour mettre en service des bibliothèques graphiques. Large programme mais tout à fait accessible et ne nécessitant pas de base technique particulière. Juste de l'observation et de la rigueur dans votre travail.
   
