@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Températures Paris — Google ColumnChart</title>
+
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 24px; }
+    #chart { width: 100%; height: 520px; }
+    #status { margin-top: 12px; white-space: pre-wrap; }
+  </style>
+</head>
+
+<body>
+  <h1>Températures à Paris — Prévisions sur 7 jours</h1>
+  <div id="chart"></div>
+  <div id="status"></div>
+
+  <script>
+    google.charts.load('current', { packages: ['corechart'] });
+    google.charts.setOnLoadCallback(init);
+
+    let cachedRows = null;
+
+    async function init() {
+      try {
+        const rows = await fetchParisData();
+        cachedRows = rows;
+        drawChart(rows);
+
+        window.addEventListener('resize', () => {
+          if (cachedRows) drawChart(cachedRows);
+        });
+      } catch (err) {
+        showStatus("Erreur: " + (err?.message || err));
+        console.error(err);
+      }
+    }
+
+    async function fetchParisData() {
+      const res = await fetch('/paris', { headers: { 'Accept': 'application/json' } });
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status} sur /paris`);
+      }
+
+      const json = await res.json();
+
+      // Conversion des données reçues en format compatible Google Charts
+      const rows = json.map(p => {
+        const dt = toDate(p.datetime);
+        const temp = Number(p.temperature_c);
+        return [dt, temp];
+      });
+
+      rows.sort((a, b) => a[0] - b[0]);
+      return rows;
+    }
+
+    function toDate(isoLike) {
+      const [datePart, timePart] = isoLike.split('T');
+      const [y, m, d] = datePart.split('-').map(Number);
+      const [hh, mm] = timePart.split(':').map(Number);
+      return new Date(y, m - 1, d, hh, mm, 0);
+    }
+
+    function drawChart(rows) {
+      const data = new google.visualization.DataTable();
+      data.addColumn('datetime', 'Date/Heure');
+      data.addColumn('number', 'Température (°C)');
+      data.addRows(rows);
+
+      const options = {
+        title: 'Température à Paris (Histogramme)',
+        legend: { position: 'none' },
+        hAxis: {
+          title: 'Date/Heure',
+          format: 'dd/MM HH:mm',
+          gridlines: { count: 7 } // Aide à visualiser les 7 jours
+        },
+        vAxis: {
+          title: 'Degrés Celsius (°C)'
+        },
+        // Option spécifique pour les graphiques à colonnes
+        bar: { groupWidth: '90%' }, 
+        explorer: { actions: ['dragToZoom', 'rightClickToReset'] }
+      };
+
+      // Utilisation de ColumnChart au lieu de LineChart
+      const chart = new google.visualization.ColumnChart(document.getElementById('chart'));
+      chart.draw(data, options);
+
+      showStatus(`OK — ${rows.length} points chargés pour les 7 prochains jours`);
+    }
+
+    function showStatus(msg) {
+      document.getElementById('status').textContent = msg;
+    }
+  </script>
+</body>
+</html>
