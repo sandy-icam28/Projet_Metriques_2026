@@ -43,6 +43,9 @@ def mongraphique2():
 def moncontact():
     return render_template("contact.html")
 
+@app.route("/contact_avion")
+def moncontactavion():
+    return render_template("contact_avion.html")
 
 # Ne rien mettre après ce commentaire
     
