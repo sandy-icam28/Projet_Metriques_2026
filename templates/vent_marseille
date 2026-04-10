@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitesse du Vent à Marseille</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Vitesse du Vent à Marseille</h1>
+    <table id="windTable">
+        <thead>
+            <tr>
+                <th>Heure</th>
+                <th>Vitesse du Vent (km/h)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Les données seront insérées ici par JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        // Coordonnées de Marseille
+        const latitude = 43.30;
+        const longitude = 5.37;
+
+        // URL de l'API Open-Meteo pour les prévisions horaires
+        const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=windspeed_10m&timezone=Europe%2FParis`;
+
+        // Fonction pour récupérer et afficher les données
+        async function fetchWindData() {
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                const times = data.hourly.time;
+                const windspeeds = data.hourly.windspeed_10m;
+
+                const tbody = document.querySelector('#windTable tbody');
+                tbody.innerHTML = ''; // Vider le tableau
+
+                // Afficher les 24 prochaines heures
+                for (let i = 0; i < 24 && i < times.length; i++) {
+                    const time = new Date(times[i]).toLocaleString('fr-FR', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        day: '2-digit',
+                        month: '2-digit'
+                    });
+                    const windspeed = windspeeds[i];
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td>${time}</td><td>${windspeed}</td>`;
+                    tbody.appendChild(row);
+                }
+            } catch (error) {
+                console.error('Erreur lors de la récupération des données:', error);
+                const tbody = document.querySelector('#windTable tbody');
+                tbody.innerHTML = '<tr><td colspan="2">Erreur de chargement des données</td></tr>';
+            }
+        }
+
+        // Appeler la fonction au chargement de la page
+        fetchWindData();
+    </script>
+</body>
+</html>
