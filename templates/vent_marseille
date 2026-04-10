@@ -5,33 +5,102 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vitesse du Vent à Marseille</title>
     <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #87CEEB, #FFFFFF);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #2E8B57;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .windsock {
+            width: 100px;
+            height: auto;
+            display: block;
+            margin: 0 auto 10px;
+        }
         table {
             border-collapse: collapse;
             width: 100%;
+            margin-top: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            overflow: hidden;
         }
         th, td {
             border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
+            padding: 12px;
+            text-align: center;
         }
         th {
-            background-color: #f2f2f2;
+            background: linear-gradient(to right, #4CAF50, #45a049);
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+        tr:hover {
+            background: #e8f5e8;
+        }
+        .cloud {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 80px;
+            height: auto;
+            opacity: 0.7;
+        }
+        .loading {
+            text-align: center;
+            font-size: 1.2em;
+            color: #666;
+        }
+        .error {
+            color: #d9534f;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <h1>Vitesse du Vent à Marseille</h1>
-    <table id="windTable">
-        <thead>
-            <tr>
-                <th>Heure</th>
-                <th>Vitesse du Vent (km/h)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Les données seront insérées ici par JavaScript -->
-        </tbody>
-    </table>
+    <div class="container">
+        <div class="header">
+            <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Manche à air" class="windsock">
+            <h1>Vitesse du Vent à Marseille</h1>
+        </div>
+        <img src="https://cdn-icons-png.flaticon.com/512/414/414927.png" alt="Nuage" class="cloud">
+        <table id="windTable">
+            <thead>
+                <tr>
+                    <th>Heure</th>
+                    <th>Vitesse du Vent (km/h)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="2" class="loading">Chargement des données...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <script>
         // Coordonnées de Marseille
@@ -70,7 +139,7 @@
             } catch (error) {
                 console.error('Erreur lors de la récupération des données:', error);
                 const tbody = document.querySelector('#windTable tbody');
-                tbody.innerHTML = '<tr><td colspan="2">Erreur de chargement des données</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="2" class="error">Erreur de chargement des données</td></tr>';
             }
         }
 
