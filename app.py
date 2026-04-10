@@ -47,6 +47,10 @@ def moncontact():
 def moncontactavion():
     return render_template("contact.html")
 
+@app.route("/atelier")
+def monatelier():
+    return render_template("vent_marseille.html")
+
 # Ne rien mettre après ce commentaire
     
 if __name__ == "__main__":
